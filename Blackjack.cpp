@@ -38,6 +38,7 @@ int main(){
     int DealerSuit2=Suitdist(gen);
     int PSum=sum(PlayerNum1)+sum(PlayerNum2);
     int DSum=sum(DealerNum1)+sum(DealerNum2);
+    int DAce=(DealerNum1==1)+(DealerNum2==1);
 
     int PAce=0;
     if (PlayerNum1==1)
@@ -61,6 +62,12 @@ int main(){
 
     while (true)
     {
+        if (PSum==21)
+    {
+        cout<<"Blackjack!!!!";
+        break;
+    }
+
         cout<<"Hit or Stand?"<<"\n";
         cin>>input;
         if (input==hit)
@@ -74,39 +81,59 @@ int main(){
         {
             PAce++;
         }
+        while (PSum>21 && PAce>0)
+        {
+            PSum -= 10;
+            PAce--;
+        }
 
         cout<<"Your total now is: "<<PSum<<"\n";
         if (PSum==21)
         {
             cout<<"Blackjack!!!";
             break;
-        }else if (PSum>21 && PAce>0)
+        }else if (PSum>21)
         {
-            PSum -= 10;
-            PAce--;
-            if (PSum>21)
-            {
-                cout<<"You lost";
-                break;
-            }
+            cout<<"You Lose";
+            break;
         }
     }else if (input==stand)
         {
             cout<<"Your total sum now is: "<<PSum<<"\n";
             cout<<"Dealer's Second card is: "<<DCard2<<"\n";
-            if (DSum<17)
-            {
-                int DRandomNum=Numdist(gen);
-                int DRandomSuit=Suitdist(gen);
-                cout<<"Dealer's next card is: "<<Card(DRandomNum,DRandomSuit)<<"\n";
-                DSum += sum(DRandomNum);
-            }else if(DSum>=17){
-                cout<<"Dealer's Total sum is: "<<DSum<<"\n";
-                cout<<"YOU WIN!!";
+
+            while (DSum<17)
+                {
+                    int DRandomNum=Numdist(gen);
+                    int DRandomSuit=Suitdist(gen);
+                    cout<<"Dealer's next card is: "<<Card(DRandomNum,DRandomSuit)<<"\n";
+                    DSum += sum(DRandomNum);
+
+                    if (DRandomNum==1){
+                        DAce++;
+                    }
+                    while (DSum>21 && DAce>0)
+                    {
+                        DSum -=10;
+                        DAce--;
+                    }
+                    
+                }
+                
+                    if (DSum<=PSum)
+                {
+                    cout<<"The dealer's total sum is: "<<DSum<<"\n";
+                    cout<<"YOU WIN!!!!";
+                }
+                    else if (DSum>PSum && DSum<21)
+                {
+                    cout<<"The dealer's total sum is: "<<DSum<<"\n";
+                    cout<<"You Lose";
+                    break;
+                }
+                
                 break;
-            }
-            
-        }
+                }
     }
 
     return 0;
